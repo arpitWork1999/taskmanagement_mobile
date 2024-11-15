@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "727963531798",
+    "project_id": "jira-auth-e7daf",
+    "storage_bucket": "jira-auth-e7daf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727963531798:android:95c9c3b40baff0b0e51337",
+        "android_client_info": {
+          "package_name": "com.example.taskManagementTool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZzZQmiYW0h2UMB5N7ZPS6tP7RVimAlEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727963531798:android:68a3b76c15a0eface51337",
+        "android_client_info": {
+          "package_name": "com.example.task_management_tool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZzZQmiYW0h2UMB5N7ZPS6tP7RVimAlEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
