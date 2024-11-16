@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_management_tool/homepage.dart';
 import 'package:task_management_tool/login_screen.dart';
+import 'package:task_management_tool/main_screen.dart';
 import 'package:task_management_tool/signup_screen.dart';
 
 void main() async{
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         return  const MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'First Method',
-          home: Homepage(),
+          home: MainScreen(),
+          //home: Homepage(),
           );
   });
 
