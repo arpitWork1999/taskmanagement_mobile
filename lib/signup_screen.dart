@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:task_management_tool/custom_navigator.dart';
+import 'package:task_management_tool/widgets/custom_navigator.dart';
 import 'package:task_management_tool/main_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

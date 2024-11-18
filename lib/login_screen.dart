@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:task_management_tool/custom_navigator.dart';
+import 'package:task_management_tool/widgets/custom_navigator.dart';
 import 'package:task_management_tool/main_screen.dart';
 import 'package:task_management_tool/signup_screen.dart';
 
