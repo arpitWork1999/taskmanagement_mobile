@@ -29,11 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
   String extractErrorMessage(dynamic error) {
     String errorString = error.toString();
 
-    // Customize logic to extract desired part of the message
+    
     if (errorString.contains(']')) {
       return errorString.split(']').last.trim();
     }
-    return "An error occurred"; // Default message
+    return "An error occurred"; // 
   }
 
   @override

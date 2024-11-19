@@ -23,13 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     "USERS",
-      //     style: GoogleFonts.fredoka(
-      //         textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 30)),
-      //   ),
-      // ),
+    
       body: _screens[_currentIndex],
        bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

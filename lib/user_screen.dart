@@ -65,12 +65,12 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-//---------------------------------CUSTOM WIDGETS------------------------------------
+  //---------------------------------CUSTOM WIDGETS------------------------------------
 
   Widget containerCard({
-    String? Name,
-    String? Employee_Code,
-    String? Skill,
+    String? name,
+    String? employeeCode,
+    String? skill,
   }) {
     return StreamBuilder(
         stream: employeeStream,
@@ -102,7 +102,7 @@ class _UserScreenState extends State<UserScreen> {
                             SlidableAction(
                               onPressed: (context) => DatabaseMethods()
                                   .deleteEmployeeDetail(ds["ID"]),
-                              backgroundColor: const Color(0xFF0392CF),
+                              backgroundColor: const Color.fromARGB(255, 231, 55, 55),
                               foregroundColor: Colors.white,
                               icon: Icons.delete,
                               label: 'Delete',
@@ -118,13 +118,15 @@ class _UserScreenState extends State<UserScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Text("Name:- " + ds["Name"],
-                                        style: GoogleFonts.fredoka(
-                                            fontSize: 21.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                            Spacer(),
-                                            CircleAvatar(radius: 15.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public?${index+1}"),)
+                                    Expanded(
+                                      child: Text("Name:- " + ds["Name"],
+                                          style: GoogleFonts.fredoka(
+                                              fontSize: 21.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white)),
+                                    ),
+                                            
+                                            CircleAvatar(radius: 15.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
                                   ],
                                 ),
                                 Text("Employee Code:- " + ds["Employee_Code"],
@@ -163,9 +165,9 @@ class _UserScreenState extends State<UserScreen> {
                     return Column(
                       children: [
                         containerCard(
-                          Name: "Name:- " + ds["Name"],
-                          Employee_Code: "Employee_Code:- " + ds["Email"],
-                          Skill: "Skill:- " + ds["Skill"],
+                          name: "Name:- " + ds["Name"],
+                          employeeCode: "Employee_Code:- " + ds["Email"],
+                          skill: "Skill:- " + ds["Skill"],
                         ),
                         const SizedBox(
                           height: 5,
@@ -195,10 +197,12 @@ class _UserScreenState extends State<UserScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Edit Details",
-                              style: GoogleFonts.fredoka(
-                                  fontSize: 30.sp,
-                                  fontWeight: FontWeight.w400)),
+                          Expanded(
+                            child: Text("Edit Details",
+                                style: GoogleFonts.fredoka(
+                                    fontSize: 30.sp,
+                                    fontWeight: FontWeight.w400)),
+                          ),
                           GestureDetector(
                             onTap: () {
                               clearText();
@@ -281,10 +285,12 @@ class _UserScreenState extends State<UserScreen> {
           return AlertDialog(
             title: Row(
               children: [
-                Text("Add User",
-                    style: GoogleFonts.fredoka(
-                        fontSize: 30.sp, fontWeight: FontWeight.w400)),
-                const Spacer(),
+                Expanded(
+                  child: Text("Add User",
+                      style: GoogleFonts.fredoka(
+                          fontSize: 30.sp, fontWeight: FontWeight.w400)),
+                ),
+                
                 IconButton(
                   onPressed: () {
                     clearText();

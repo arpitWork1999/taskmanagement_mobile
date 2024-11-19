@@ -6,6 +6,7 @@ import 'package:task_management_tool/login_screen.dart';
 import 'package:task_management_tool/main_screen.dart';
 import 'package:task_management_tool/projects_screen.dart';
 import 'package:task_management_tool/signup_screen.dart';
+import 'package:task_management_tool/tasks_screen.dart';
 
 Future main() async{
  WidgetsFlutterBinding.ensureInitialized();
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'First Method',
           //home: ProjectScreen(),
-          home: MainScreen(),
-          //home: Homepage(),
+          //home:TaskScreen()
+          //home: MainScreen(),
+          home: Homepage(),
           );
   });
 
