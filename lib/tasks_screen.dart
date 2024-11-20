@@ -42,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     super.initState();
-     getontheload();
+    getontheload();
     getProjectList();
     getUserList();
   }
@@ -55,7 +55,7 @@ class _TaskScreenState extends State<TaskScreen> {
         projectDropdownValues = fetchedValues;
       });
     } catch (e) {
-      print("Error fetching project list: $e");
+      ("Error fetching project list: $e");
     }
   }
 
@@ -81,10 +81,13 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(247, 128, 62, 241),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(247, 133, 67, 246),
         title: Text(
           "Tasks",
-          style: GoogleFonts.fredoka(fontSize: 34, fontWeight: FontWeight.w600),
+          style: GoogleFonts.fredoka(
+              fontSize: 30, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
       body: containerCard(),
@@ -93,8 +96,8 @@ class _TaskScreenState extends State<TaskScreen> {
         onPressed: () {
           customDilogbox(context);
         },
-        backgroundColor: Colors.black,
-        elevation: 5,
+        backgroundColor: const Color.fromARGB(247, 144, 83, 249),
+        elevation: 20,
         splashColor: Colors.grey,
         child: const Icon(
           Icons.add_task,
@@ -108,7 +111,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
   //-------------------------------CUSTOM WIDGETS----------------------------------
 
- Widget containerCard({
+  Widget containerCard({
     String? taskName,
     String? moduleName,
     // String? AssignedProject,
@@ -122,7 +125,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot ds = snapshot.data.docs[index];
-                    
+
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(10, 9, 10, 1),
                       child: Slidable(
@@ -142,9 +145,10 @@ class _TaskScreenState extends State<TaskScreen> {
                               label: 'Edit',
                             ),
                             SlidableAction(
-                              onPressed: (context) => DatabaseMethods()
-                                  .deleteTaskDetail(ds["ID"]),
-                              backgroundColor: const Color.fromARGB(255, 231, 55, 55),
+                              onPressed: (context) =>
+                                  DatabaseMethods().deleteTaskDetail(ds["ID"]),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 231, 55, 55),
                               foregroundColor: Colors.white,
                               icon: Icons.delete,
                               label: 'Delete',
@@ -152,7 +156,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           ],
                         ),
                         child: Card(
-                          color: Colors.white,
+                          color: const Color.fromARGB(255, 145, 87, 244),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -161,19 +165,20 @@ class _TaskScreenState extends State<TaskScreen> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Text(ds["TaskName"],
+                                      child: Text(
+                                          'Task Name:- ${ds["TaskName"]}',
                                           style: GoogleFonts.fredoka(
-                                              fontSize: 21.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: FontWeight.w500,
-                                              color: Colors.black)),
+                                              color: Colors.white)),
                                     ),
                                   ],
                                 ),
-                                Text(ds["ModuleName"],
-                                          style: GoogleFonts.fredoka(
-                                              fontSize: 21.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black))
+                                Text('Module Name:- ${ds["ModuleName"]}',
+                                    style: GoogleFonts.fredoka(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white)),
                               ],
                             ),
                           ),
@@ -182,13 +187,26 @@ class _TaskScreenState extends State<TaskScreen> {
                     );
                   },
                 )
-              : Container(
-                  decoration: const BoxDecoration(color: Colors.black),
-                );
+              : const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                          height: 50.0,
+                          width: 50.0,
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                            value: null,
+                            strokeWidth: 5.0,
+                          ),
+                        ),
+                      )
+                    ]);
         });
   }
 
-Widget allTaskDetails() {
+  Widget allTaskDetails() {
     return StreamBuilder(
         stream: employeeStream,
         builder: (context, AsyncSnapshot snapshot) {
@@ -200,9 +218,8 @@ Widget allTaskDetails() {
                     return Column(
                       children: [
                         containerCard(
-                          taskName:  ds["TaskName"],
-                          moduleName:
-                              ds["ModuleName"],
+                          taskName: ds["TaskName"],
+                          moduleName: ds["ModuleName"],
                         ),
                         const SizedBox(
                           height: 5,
@@ -217,7 +234,7 @@ Widget allTaskDetails() {
         });
   }
 
-Future editTaskDetails(String id) => showDialog(
+  Future editTaskDetails(String id) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
             content: SingleChildScrollView(
@@ -266,7 +283,7 @@ Future editTaskDetails(String id) => showDialog(
                                   width: 3, color: Colors.black),
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                      ), 
+                      ),
                       SizedBox(height: 20.h),
                       ElevatedButton(
                         onPressed: () async {
@@ -383,9 +400,10 @@ Future editTaskDetails(String id) => showDialog(
                     dropDownList: projectDropdownValues,
                     listTextStyle: const TextStyle(color: Colors.black),
                     dropDownItemCount: 4,
-                    onChanged: (value) {
+                    onChanged: (val) {
+                      print("DATATAA${val.value}");
                       setState(() {
-                        projectId = value.name;
+                        projectId = val.value;
                       });
                     },
                   ),
@@ -407,7 +425,7 @@ Future editTaskDetails(String id) => showDialog(
                     listTextStyle: const TextStyle(color: Colors.black),
                     dropDownItemCount: 3,
                     onChanged: (dynamic value) {
-                      if (value != null) {
+                      if (value != null) { 
                         onItemChanged(
                             value); // Ensure this matches the expected type
                       }
@@ -424,8 +442,7 @@ Future editTaskDetails(String id) => showDialog(
                         "AssignedProject": projectId,
                         "ID": id,
                       };
-                      await DatabaseMethods()
-                          .addTaskDetails(employeeInfoMap, id);
+                      await DatabaseMethods().addTaskDetails(employeeInfoMap, id);
                       clearText();
                       Navigator.of(context, rootNavigator: true).pop();
                     },

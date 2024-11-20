@@ -12,7 +12,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-
   final List<String> imgList = [
     "assets/images/first.png",
     "assets/images/second.png",
@@ -120,7 +119,11 @@ class _HomepageState extends State<Homepage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size(250.h, 45.w),
@@ -137,7 +140,10 @@ class _HomepageState extends State<Homepage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SignUpScreen()));
                   },
                   style: ElevatedButton.styleFrom(
                       side: const BorderSide(width: 1, color: Colors.white),

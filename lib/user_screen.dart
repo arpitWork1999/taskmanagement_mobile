@@ -44,13 +44,13 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         title: Text(
           "Users",
-          style: GoogleFonts.fredoka(fontSize: 34, fontWeight: FontWeight.w600),
+          style: GoogleFonts.fredoka(fontSize: 30, fontWeight: FontWeight.w500),
         ),
       ),
       body: containerCard(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          arpitDilogbox(context);
+          customDilogbox(context);
         },
         backgroundColor: Colors.black,
         elevation: 5,
@@ -119,7 +119,7 @@ class _UserScreenState extends State<UserScreen> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Text("Name:- " + ds["Name"],
+                                      child: Text('Name:- ${ds["Name"]}',
                                           style: GoogleFonts.fredoka(
                                               fontSize: 21.sp,
                                               fontWeight: FontWeight.w500,
@@ -129,12 +129,12 @@ class _UserScreenState extends State<UserScreen> {
                                             CircleAvatar(radius: 15.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
                                   ],
                                 ),
-                                Text("Employee Code:- " + ds["Employee_Code"],
+                                Text('Employee Code:- ${ds["Employee_Code"]}',
                                     style: GoogleFonts.fredoka(
                                         fontSize: 21.sp,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.white)),
-                                Text("Skill:-" + ds["Skill"],
+                                Text("Skill:- ${ds["Skill"]}",
                                     style: GoogleFonts.fredoka(
                                         fontSize: 21.sp,
                                         fontWeight: FontWeight.w500,
@@ -147,9 +147,24 @@ class _UserScreenState extends State<UserScreen> {
                     );
                   },
                 )
-              : Container(
-                  decoration: const BoxDecoration(color: Colors.black),
-                );
+              : const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child:  SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: CircularProgressIndicator(
+                          color: Colors.blue,
+                          value: null,
+                          strokeWidth: 5.0,
+                        ),
+                      ),
+                    ),
+                   
+                  ]
+              );
         });
   }
 
@@ -278,7 +293,7 @@ class _UserScreenState extends State<UserScreen> {
             ),
           ));
 
-  void arpitDilogbox(BuildContext context) {
+  void customDilogbox(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:task_management_tool/profile_screen.dart';
 import 'package:task_management_tool/projects_screen.dart';
 import 'package:task_management_tool/tasks_screen.dart';

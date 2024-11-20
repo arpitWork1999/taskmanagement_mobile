@@ -18,6 +18,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   final projectNameController = TextEditingController();
   final projectDescController = TextEditingController();
   Stream? employeeStream;
+  Stream? userStream;
 
   void clearText() {
     projectNameController.clear();
@@ -41,7 +42,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       appBar: AppBar(
         title: Text(
           "Projects",
-          style: GoogleFonts.fredoka(fontSize: 34, fontWeight: FontWeight.w600),
+          style: GoogleFonts.fredoka(fontSize: 30, fontWeight: FontWeight.w500),
         ),
       ),
       body: containerCard(),
@@ -76,7 +77,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     DocumentSnapshot ds = snapshot.data.docs[index];
-                    
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(10, 9, 10, 1),
                       child: Slidable(
@@ -98,7 +98,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                             SlidableAction(
                               onPressed: (context) => DatabaseMethods()
                                   .deleteProjectDetail(ds["ID"]),
-                              backgroundColor: const Color.fromARGB(255, 231, 55, 55),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 231, 55, 55),
                               foregroundColor: Colors.white,
                               icon: Icons.delete,
                               label: 'Delete',
@@ -118,20 +119,34 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       child: Text(ds["Project_Name"],
                                           style: GoogleFonts.fredoka(
                                               fontSize: 21.sp,
-                                              fontWeight: FontWeight.w500,
+                                              //fontWeight: FontWeight.w500,
                                               color: Colors.black)),
                                     ),
+                                    IconButton(
+                                      onPressed: () {
+                                        // customDialogList(context);
+                                      },
+                                      icon: const Icon(Icons
+                                          .arrow_drop_down_circle_outlined),
+                                      style: ButtonStyle(
+                                          iconColor: WidgetStateProperty.all(
+                                              Colors.blue)),
+                                    )
                                   ],
                                 ),
                                 ReadMoreText(
-                                  "Description:- " + ds["Project_Desc"],
+                                  "Description:- ${ds["Project_Desc"]}",
                                   trimLines: 2,
                                   trimMode: TrimMode.Line,
-                                  lessStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue),
-                                  moreStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue),
-                                  trimCollapsedText: "readmore",
-                                  trimExpandedText: "readless",
-                                  style: TextStyle(color: const Color.fromARGB(255, 145, 143, 143)),
+                                  lessStyle:
+                                      const TextStyle(color: Colors.blue),
+                                  moreStyle:
+                                      const TextStyle(color: Colors.blue),
+                                  trimCollapsedText: "Read more",
+                                  trimExpandedText: "Read Less",
+                                  style: const TextStyle(
+                                      color:
+                                          Color.fromARGB(255, 145, 143, 143)),
                                 ),
                               ],
                             ),
@@ -141,9 +156,22 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     );
                   },
                 )
-              : Container(
-                  decoration: const BoxDecoration(color: Colors.black),
-                );
+              : const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                          height: 50.0,
+                          width: 50.0,
+                          child: CircularProgressIndicator(
+                            color: Colors.blue,
+                            value: null,
+                            strokeWidth: 5.0,
+                          ),
+                        ),
+                      )
+                    ]);
         });
   }
 
@@ -159,9 +187,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     return Column(
                       children: [
                         containerCard(
-                          projectName: "Project Name:- " + ds["Project_Name"],
+                          projectName: "Project Name:- ${ds["Project_Name"]}",
                           projectDesc:
-                              "Project Description:- " + ds["Project_Desc"],
+                              "Project Description:- ${ds["Project_Desc"]}",
                         ),
                         const SizedBox(
                           height: 5,
@@ -238,7 +266,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                           await DatabaseMethods()
                               .updateProjectDetails(id, updateInfo)
                               .then((onValue) {
-                                clearText();
+                            clearText();
                             Navigator.pop(context);
                           });
                         },
@@ -272,7 +300,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               children: [
                 Expanded(
                   child: Text("Add Project",
-                  //overflow: TextOverflow.ellipsis,
+                      //overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.fredoka(
                           fontSize: 30.sp, fontWeight: FontWeight.w400)),
                 ),
@@ -329,6 +357,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                         "Project_Name": projectNameController.text,
                         "Project_Desc": projectDescController.text,
                         "ID": id,
+                        "AssignedUsers": []
                       };
                       await DatabaseMethods()
                           .addProjectDetails(employeeInfoMap, id);
@@ -354,4 +383,110 @@ class _ProjectScreenState extends State<ProjectScreen> {
           );
         });
   }
+
+  // void customDialogList(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: SizedBox(
+  //             width: double.infinity,
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Text(
+  //                   "User List",
+  //                   style: GoogleFonts.fredoka(
+  //                     fontSize: 20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                   ),
+  //                 ),
+  //                 IconButton(
+  //                   onPressed: () {
+  //                     clearText();
+  //                     Navigator.pop(context);
+  //                   },
+  //                   icon: const Icon(
+  //                     Icons.close,
+  //                     size: 20,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           content: SizedBox(
+  //             height: 400,
+  //             width: MediaQuery.of(context).size.width * 0.8, // Adjust width
+  //             child: customList(context)
+  //             // ListView(
+  //             //   padding: const EdgeInsets.all(8),
+  //             //   children: <Widget>[
+  //             //     Container(
+  //             //       height: 50,
+  //             //       color: Colors.amber[600],
+  //             //       child: const Center(child: Text('Entry A')),
+  //             //     ),
+  //             //     Container(
+  //             //       height: 50,
+  //             //       color: Colors.amber[500],
+  //             //       child: const Center(child: Text('Entry B')),
+  //             //     ),
+  //             //     Container(
+  //             //       height: 50,
+  //             //       color: Colors.amber[100],
+  //             //       child: const Center(child: Text('Entry C')),
+  //             //     ),
+  //             //   ],
+  //             // ),
+  //           ),
+  //         );
+  //       });
+  // }
+
+  // Widget customList(BuildContext context) {
+  //   return StreamBuilder(
+  //       stream: userStream,
+  //       builder: (context, AsyncSnapshot snapshot) {
+  //         return snapshot.hasData
+  //             ? ListView.builder(
+  //                 itemCount: snapshot.data.docs.length,
+  //                 itemBuilder: (context, index) {
+  //                   DocumentSnapshot ds = snapshot.data.docs[index];
+  //                   return ListView.separated(
+  //                       itemBuilder: (context, index) {
+  //                         return ListTile(
+  //                           leading: CircleAvatar(
+  //                             child: Text('${index + 1}'),
+  //                           ),
+  //                           title: Text('Item ${index + 1}'),
+  //                           subtitle: Text('Subtitle for Item ${index + 1}'),
+  //                           onTap: () {
+  //                             // Action when the item is tapped
+  //                             print('Tapped on Item ${index + 1}');
+  //                           },
+  //                         );
+  //                       },
+  //                       separatorBuilder: (context, index) =>
+  //                           const Divider(color: Colors.grey),
+  //                       itemCount: 3);
+  //                 },
+  //               )
+  //             : const Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: <Widget>[
+  //                     Center(
+  //                       child: SizedBox(
+  //                         height: 50.0,
+  //                         width: 50.0,
+  //                         child: CircularProgressIndicator(
+  //                           color: Colors.blue,
+  //                           value: null,
+  //                           strokeWidth: 5.0,
+  //                         ),
+  //                       ),
+  //                     )
+  //                   ]);
+  //       });
+  // }
 }
