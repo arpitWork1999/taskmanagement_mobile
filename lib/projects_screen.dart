@@ -42,7 +42,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
       appBar: AppBar(
         title: Text(
           "Projects",
-          style: GoogleFonts.fredoka(fontSize: 30, fontWeight: FontWeight.w500),
+          style: GoogleFonts.fredoka(fontSize: 30,
+           //fontWeight: FontWeight.w500
+           ),
         ),
       ),
       body: containerCard(),

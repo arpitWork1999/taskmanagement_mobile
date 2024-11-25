@@ -168,16 +168,14 @@ class _TaskScreenState extends State<TaskScreen> {
                                       child: Text(
                                           'Task Name:- ${ds["TaskName"]}',
                                           style: GoogleFonts.fredoka(
-                                              fontSize: 18.sp,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16.sp,
                                               color: Colors.white)),
                                     ),
                                   ],
                                 ),
                                 Text('Module Name:- ${ds["ModuleName"]}',
                                     style: GoogleFonts.fredoka(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.sp,
                                         color: Colors.white)),
                               ],
                             ),

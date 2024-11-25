@@ -8,7 +8,7 @@ class DatabaseMethods {
         .collection("User")
         .doc(id)
         .set(employeeInfoMap);
-  }
+  } 
 
   //getEmployeeDetails() {}
   Future<Stream<QuerySnapshot>> getEmployeeDetails() async {

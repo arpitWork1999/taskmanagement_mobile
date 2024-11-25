@@ -44,7 +44,9 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         title: Text(
           "Users",
-          style: GoogleFonts.fredoka(fontSize: 30, fontWeight: FontWeight.w500),
+          style: GoogleFonts.fredoka(fontSize: 30,
+           //fontWeight: FontWeight.w500
+           ),
         ),
       ),
       body: containerCard(),
@@ -121,23 +123,20 @@ class _UserScreenState extends State<UserScreen> {
                                     Expanded(
                                       child: Text('Name:- ${ds["Name"]}',
                                           style: GoogleFonts.fredoka(
-                                              fontSize: 21.sp,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16.sp,
                                               color: Colors.white)),
                                     ),
                                             
-                                            CircleAvatar(radius: 15.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
+                                            CircleAvatar(radius: 13.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
                                   ],
                                 ),
                                 Text('Employee Code:- ${ds["Employee_Code"]}',
                                     style: GoogleFonts.fredoka(
-                                        fontSize: 21.sp,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.sp,
                                         color: Colors.white)),
                                 Text("Skill:- ${ds["Skill"]}",
                                     style: GoogleFonts.fredoka(
-                                        fontSize: 21.sp,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.sp,
                                         color: Colors.white)),
                               ],
                             ),
