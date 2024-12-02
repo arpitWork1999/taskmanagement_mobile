@@ -110,7 +110,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             await _auth.createUserWithEmailAndPassword(
                                 email: email ?? "", password: password ?? "");
                         if (newUser != null) {
-                          NavigationService.navigateTo(const MainScreen(), context);
+                          Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => MainScreen(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
                            clearText();
                         }
                       } catch (e) {

@@ -17,8 +17,10 @@ class ProjectScreen extends StatefulWidget {
 class _ProjectScreenState extends State<ProjectScreen> {
   final projectNameController = TextEditingController();
   final projectDescController = TextEditingController();
+  DatabaseMethods dialog = DatabaseMethods();
   Stream? employeeStream;
   Stream? userStream;
+  List<Map<String, dynamic>> assignedUserList = [];
 
   void clearText() {
     projectNameController.clear();
@@ -33,6 +35,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   @override
   initState() {
     getontheload();
+
     super.initState();
   }
 
@@ -42,9 +45,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
       appBar: AppBar(
         title: Text(
           "Projects",
-          style: GoogleFonts.fredoka(fontSize: 30,
-           //fontWeight: FontWeight.w500
-           ),
+          style: GoogleFonts.fredoka(
+            fontSize: 30,
+          ),
         ),
       ),
       body: containerCard(),
@@ -125,8 +128,19 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                               color: Colors.black)),
                                     ),
                                     IconButton(
-                                      onPressed: () {
-                                        // customDialogList(context);
+                                      onPressed: () async {
+                                        setState(() {
+                                          assignedUserList = [];
+                                        });
+
+                                        
+                                         List<Map<String,dynamic>> userList = await  dialog.fetchDocumentData(ds["ID"]);
+                                            setState(() {
+                                              customUserList(context);
+                                              assignedUserList = userList;
+                                            });
+                                            print("userList is$userList");
+                                        //customDialogList(context);
                                       },
                                       icon: const Icon(Icons
                                           .arrow_drop_down_circle_outlined),
@@ -386,109 +400,57 @@ class _ProjectScreenState extends State<ProjectScreen> {
         });
   }
 
-  // void customDialogList(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: SizedBox(
-  //             width: double.infinity,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text(
-  //                   "User List",
-  //                   style: GoogleFonts.fredoka(
-  //                     fontSize: 20.sp,
-  //                     fontWeight: FontWeight.w400,
-  //                   ),
-  //                 ),
-  //                 IconButton(
-  //                   onPressed: () {
-  //                     clearText();
-  //                     Navigator.pop(context);
-  //                   },
-  //                   icon: const Icon(
-  //                     Icons.close,
-  //                     size: 20,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           content: SizedBox(
-  //             height: 400,
-  //             width: MediaQuery.of(context).size.width * 0.8, // Adjust width
-  //             child: customList(context)
-  //             // ListView(
-  //             //   padding: const EdgeInsets.all(8),
-  //             //   children: <Widget>[
-  //             //     Container(
-  //             //       height: 50,
-  //             //       color: Colors.amber[600],
-  //             //       child: const Center(child: Text('Entry A')),
-  //             //     ),
-  //             //     Container(
-  //             //       height: 50,
-  //             //       color: Colors.amber[500],
-  //             //       child: const Center(child: Text('Entry B')),
-  //             //     ),
-  //             //     Container(
-  //             //       height: 50,
-  //             //       color: Colors.amber[100],
-  //             //       child: const Center(child: Text('Entry C')),
-  //             //     ),
-  //             //   ],
-  //             // ),
-  //           ),
-  //         );
-  //       });
-  // }
+ void customUserList(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "User List",
+              style: GoogleFonts.fredoka(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                clearText();
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.close,
+                size: 20,
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          height: 400,
+          width: MediaQuery.of(context).size.width * 0.8, // Adjust width
+          child: ListView.builder(
+            itemCount: assignedUserList.length,
+            itemBuilder: (context, index) {
+              var data = assignedUserList[index];
+              String name = data["Name"];
 
-  // Widget customList(BuildContext context) {
-  //   return StreamBuilder(
-  //       stream: userStream,
-  //       builder: (context, AsyncSnapshot snapshot) {
-  //         return snapshot.hasData
-  //             ? ListView.builder(
-  //                 itemCount: snapshot.data.docs.length,
-  //                 itemBuilder: (context, index) {
-  //                   DocumentSnapshot ds = snapshot.data.docs[index];
-  //                   return ListView.separated(
-  //                       itemBuilder: (context, index) {
-  //                         return ListTile(
-  //                           leading: CircleAvatar(
-  //                             child: Text('${index + 1}'),
-  //                           ),
-  //                           title: Text('Item ${index + 1}'),
-  //                           subtitle: Text('Subtitle for Item ${index + 1}'),
-  //                           onTap: () {
-  //                             // Action when the item is tapped
-  //                             print('Tapped on Item ${index + 1}');
-  //                           },
-  //                         );
-  //                       },
-  //                       separatorBuilder: (context, index) =>
-  //                           const Divider(color: Colors.grey),
-  //                       itemCount: 3);
-  //                 },
-  //               )
-  //             : const Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.center,
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: <Widget>[
-  //                     Center(
-  //                       child: SizedBox(
-  //                         height: 50.0,
-  //                         width: 50.0,
-  //                         child: CircularProgressIndicator(
-  //                           color: Colors.blue,
-  //                           value: null,
-  //                           strokeWidth: 5.0,
-  //                         ),
-  //                       ),
-  //                     )
-  //                   ]);
-  //       });
-  // }
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text('${index + 1}'),
+                ),
+                title: Text(
+                  name,
+                  style: GoogleFonts.fredoka(
+                      fontSize: 20.sp, fontWeight: FontWeight.bold),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    },
+  );
+}
 }

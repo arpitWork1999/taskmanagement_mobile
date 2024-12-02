@@ -8,7 +8,7 @@ class DatabaseMethods {
         .collection("User")
         .doc(id)
         .set(employeeInfoMap);
-  } 
+  }
 
   //getEmployeeDetails() {}
   Future<Stream<QuerySnapshot>> getEmployeeDetails() async {
@@ -27,7 +27,11 @@ class DatabaseMethods {
     return await FirebaseFirestore.instance.collection("User").doc(id).delete();
   }
 
-  //-----------------------------------------PROJECT FUNCTION------------------------------
+  Stream<QuerySnapshot> getUserDetails() {
+    return _firestore.collection('Project').snapshots();
+  }
+
+  //-----------------------------------------PROJECT FUNCTIONS------------------------------
   Future addProjectDetails(
       Map<String, dynamic> employeeInfoMap, String id) async {
     return await FirebaseFirestore.instance
@@ -39,7 +43,6 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getProjectDetails() async {
     return await FirebaseFirestore.instance.collection("Project").snapshots();
   }
-
 
   Future updateProjectDetails(
       String id, Map<String, dynamic> updateInfo) async {
@@ -56,7 +59,7 @@ class DatabaseMethods {
         .delete();
   }
 
-  //***************************TASK FUNCTION******************************************************
+  //***************************TASK FUNCTIONS******************************************************
   Future addTaskDetails(Map<String, dynamic> employeeInfoMap, String id) async {
     copyAssignedUsers(
         employeeInfoMap['AssignedProject'], employeeInfoMap['AssignedUsers']);
@@ -141,4 +144,68 @@ class DatabaseMethods {
 
     return dropDownValues;
   }
+
+  //-----------------------------------Assigned User list-----------------------------
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  dynamic fieldValue = '';
+
+Future<List<Map<String,dynamic>>> fetchDocumentData(String documentId) async {
+  List<Map<String,dynamic>> userList = [];
+  try {
+    DocumentSnapshot document =
+        await _firestore.collection('Project').doc(documentId).get();
+
+    if (document.exists) {
+      List<dynamic> fieldValue = document['AssignedUsers']; // Assuming it's a list
+      print("OUTPUT----->>>>>> $fieldValue");
+
+      // Loop through the list of IDs and fetch user data for each
+      for (String userId in fieldValue) {
+         Map<String,dynamic> userData =  await fetchUsersData(userId);
+         userList.add(userData);
+      }
+      return userList;
+    } else {
+      return [];
+      print("Document not found");
+    }
+  } catch (e) {
+    return [];
+    print("Error fetching document: $e");
+  }
+
 }
+
+Future<Map<String,dynamic>> fetchUsersData(String userId) async {
+  try {
+    DocumentSnapshot document =
+        await _firestore.collection('User').doc(userId).get();
+    if (document.exists) {
+    
+      Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+      return userData;
+       print(userData); // Print user data
+      // return document.data();
+     
+    } else {
+      return {};
+      print("User document not found for ID: $userId");
+    }
+  } catch (e) {
+    return {};
+    print("Error fetching user data: $e");
+  }
+}
+
+}
+
+ 
+
+
+
+
+
+
+  
+
+

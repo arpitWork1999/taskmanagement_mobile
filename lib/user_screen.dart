@@ -19,6 +19,8 @@ class _UserScreenState extends State<UserScreen> {
   final nameController = TextEditingController();
   final idController = TextEditingController();
   final skillController = TextEditingController();
+    DatabaseMethods dialog = DatabaseMethods();
+
   Stream? employeeStream;
 
   void clearText() {
@@ -111,34 +113,39 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           ],
                         ),
-                        child: Card(
-                          color: const Color.fromARGB(255, 82, 169, 241),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text('Name:- ${ds["Name"]}',
-                                          style: GoogleFonts.fredoka(
-                                              fontSize: 16.sp,
-                                              color: Colors.white)),
-                                    ),
-                                            
-                                            CircleAvatar(radius: 13.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
-                                  ],
-                                ),
-                                Text('Employee Code:- ${ds["Employee_Code"]}',
-                                    style: GoogleFonts.fredoka(
-                                        fontSize: 16.sp,
-                                        color: Colors.white)),
-                                Text("Skill:- ${ds["Skill"]}",
-                                    style: GoogleFonts.fredoka(
-                                        fontSize: 16.sp,
-                                        color: Colors.white)),
-                              ],
+                        child: InkWell(
+                          onTap: (){
+                            dialog.fetchUsersData(ds["ID"]);
+                          },
+                          child: Card(
+                            color: const Color.fromARGB(255, 82, 169, 241),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text('Name:- ${ds["Name"]}',
+                                            style: GoogleFonts.fredoka(
+                                                fontSize: 16.sp,
+                                                color: Colors.white)),
+                                      ),
+                                              
+                                              CircleAvatar(radius: 13.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
+                                    ],
+                                  ),
+                                  Text('Employee Code:- ${ds["Employee_Code"]}',
+                                      style: GoogleFonts.fredoka(
+                                          fontSize: 16.sp,
+                                          color: Colors.white)),
+                                  Text("Skill:- ${ds["Skill"]}",
+                                      style: GoogleFonts.fredoka(
+                                          fontSize: 16.sp,
+                                          color: Colors.white)),
+                                ],
+                              ),
                             ),
                           ),
                         ),

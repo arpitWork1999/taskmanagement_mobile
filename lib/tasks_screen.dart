@@ -96,12 +96,12 @@ class _TaskScreenState extends State<TaskScreen> {
         onPressed: () {
           customDilogbox(context);
         },
-        backgroundColor: const Color.fromARGB(247, 144, 83, 249),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 20,
         splashColor: Colors.grey,
         child: const Icon(
           Icons.add_task,
-          color: Colors.white,
+          color: const Color.fromARGB(247, 144, 83, 249),
           size: 29,
         ),
       ),

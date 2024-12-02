@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final emailText = TextEditingController();
-    final passText = TextEditingController();
+  final passText = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String? email;
   String? password;
@@ -25,15 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
     emailText.clear();
     passText.clear();
   }
-  
+
   String extractErrorMessage(dynamic error) {
     String errorString = error.toString();
 
-    
     if (errorString.contains(']')) {
       return errorString.split(']').last.trim();
     }
-    return "An error occurred"; // 
+    return "An error occurred"; //
   }
 
   @override
@@ -63,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 15,
                 ),
                 TextField(
-                  controller: emailText,
+                    controller: emailText,
                     onChanged: (value) {
                       email = value;
                     },
@@ -80,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 TextField(
-                  controller: passText,
+                    controller: passText,
                     onChanged: (value) {
                       password = value;
                     },
@@ -105,9 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       final newUser = await _auth.signInWithEmailAndPassword(
                           email: email ?? "", password: password ?? "");
                       if (newUser != null) {
-                        NavigationService.navigateTo(
-                            const MainScreen(), context);
-                            clearText();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => MainScreen(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                        clearText();
                       }
                     } catch (e) {
                       String errorMessage = extractErrorMessage(e);
