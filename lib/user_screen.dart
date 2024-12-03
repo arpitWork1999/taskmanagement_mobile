@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:task_management_tool/service/database.dart';
 import 'package:random_string/random_string.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:task_management_tool/user_details_screen.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -19,7 +20,7 @@ class _UserScreenState extends State<UserScreen> {
   final nameController = TextEditingController();
   final idController = TextEditingController();
   final skillController = TextEditingController();
-    DatabaseMethods dialog = DatabaseMethods();
+  DatabaseMethods dialog = DatabaseMethods();
 
   Stream? employeeStream;
 
@@ -46,9 +47,10 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         title: Text(
           "Users",
-          style: GoogleFonts.fredoka(fontSize: 30,
-           //fontWeight: FontWeight.w500
-           ),
+          style: GoogleFonts.fredoka(
+            fontSize: 30,
+            //fontWeight: FontWeight.w500
+          ),
         ),
       ),
       body: containerCard(),
@@ -106,7 +108,8 @@ class _UserScreenState extends State<UserScreen> {
                             SlidableAction(
                               onPressed: (context) => DatabaseMethods()
                                   .deleteEmployeeDetail(ds["ID"]),
-                              backgroundColor: const Color.fromARGB(255, 231, 55, 55),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 231, 55, 55),
                               foregroundColor: Colors.white,
                               icon: Icons.delete,
                               label: 'Delete',
@@ -114,8 +117,12 @@ class _UserScreenState extends State<UserScreen> {
                           ],
                         ),
                         child: InkWell(
-                          onTap: (){
-                            dialog.fetchUsersData(ds["ID"]);
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => UserDetails(
+                                id: ds["ID"],
+                              ),
+                            ));
                           },
                           child: Card(
                             color: const Color.fromARGB(255, 82, 169, 241),
@@ -132,8 +139,11 @@ class _UserScreenState extends State<UserScreen> {
                                                 fontSize: 16.sp,
                                                 color: Colors.white)),
                                       ),
-                                              
-                                              CircleAvatar(radius: 13.r,backgroundImage: NetworkImage("https://avatar.iran.liara.run/public/boy?${index+1}"),)
+                                      CircleAvatar(
+                                        radius: 13.r,
+                                        backgroundImage: NetworkImage(
+                                            "https://avatar.iran.liara.run/public/boy?${index + 1}"),
+                                      )
                                     ],
                                   ),
                                   Text('Employee Code:- ${ds["Employee_Code"]}',
@@ -157,20 +167,18 @@ class _UserScreenState extends State<UserScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Center(
-                      child:  SizedBox(
-                        height: 50.0,
-                        width: 50.0,
-                        child: CircularProgressIndicator(
-                          color: Colors.blue,
-                          value: null,
-                          strokeWidth: 5.0,
+                      Center(
+                        child: SizedBox(
+                          height: 50.0,
+                          width: 50.0,
+                          child: CircularProgressIndicator(
+                            color: Colors.blue,
+                            value: null,
+                            strokeWidth: 5.0,
+                          ),
                         ),
                       ),
-                    ),
-                   
-                  ]
-              );
+                    ]);
         });
   }
 
@@ -311,7 +319,6 @@ class _UserScreenState extends State<UserScreen> {
                       style: GoogleFonts.fredoka(
                           fontSize: 30.sp, fontWeight: FontWeight.w400)),
                 ),
-                
                 IconButton(
                   onPressed: () {
                     clearText();
@@ -371,7 +378,6 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    
                     onPressed: () async {
                       String id = randomAlpha(5);
                       Map<String, dynamic> employeeInfoMap = {

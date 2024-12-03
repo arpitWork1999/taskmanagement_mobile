@@ -18,6 +18,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   final projectNameController = TextEditingController();
   final projectDescController = TextEditingController();
   DatabaseMethods dialog = DatabaseMethods();
+  String? loadingProjectId;
   Stream? employeeStream;
   Stream? userStream;
   List<Map<String, dynamic>> assignedUserList = [];
@@ -35,7 +36,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
   @override
   initState() {
     getontheload();
-
     super.initState();
   }
 
@@ -130,24 +130,61 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     IconButton(
                                       onPressed: () async {
                                         setState(() {
-                                          assignedUserList = [];
+                                          loadingProjectId =
+                                              ds["ID"]; // Start loading
                                         });
-
-                                        
-                                         List<Map<String,dynamic>> userList = await  dialog.fetchDocumentData(ds["ID"]);
-                                            setState(() {
-                                              customUserList(context);
-                                              assignedUserList = userList;
-                                            });
-                                            print("userList is$userList");
-                                        //customDialogList(context);
+                                        try {
+                                          List<Map<String, dynamic>> userList =
+                                              await dialog
+                                                  .fetchAssignedUserData(ds["ID"]);
+                                          setState(() {
+                                            assignedUserList = userList;
+                                            loadingProjectId =
+                                                null; // Stop loading
+                                          });
+                                          if (assignedUserList.isNotEmpty) {
+                                            customUserList(context);
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      'No users assigned to this project.')),
+                                            );
+                                          }
+                                        } catch (e) {
+                                          setState(() {
+                                            loadingProjectId =
+                                                null; // Stop loading
+                                          });
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'Error fetching users: $e')),
+                                          );
+                                        }
                                       },
-                                      icon: const Icon(Icons
-                                          .arrow_drop_down_circle_outlined),
-                                      style: ButtonStyle(
-                                          iconColor: WidgetStateProperty.all(
-                                              Colors.blue)),
-                                    )
+                                      icon: loadingProjectId == ds["ID"]
+                                          ? const Center(
+                                              child: SizedBox(
+                                                height: 20.0,
+                                                width: 20.0,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.blue,
+                                                  value: null,
+                                                  strokeWidth: 2.0,
+                                                ),
+                                              ),
+                                            )
+                                          : const Icon(Icons
+                                              .arrow_drop_down_circle_outlined),
+                                              style: ButtonStyle(
+                                           iconColor: WidgetStateProperty.all(
+                                               Colors.blue)),
+                                              
+                                    ),
                                   ],
                                 ),
                                 ReadMoreText(
@@ -400,57 +437,58 @@ class _ProjectScreenState extends State<ProjectScreen> {
         });
   }
 
- void customUserList(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "User List",
-              style: GoogleFonts.fredoka(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                clearText();
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.close,
-                size: 20,
-              ),
-            ),
-          ],
-        ),
-        content: SizedBox(
-          height: 400,
-          width: MediaQuery.of(context).size.width * 0.8, // Adjust width
-          child: ListView.builder(
-            itemCount: assignedUserList.length,
-            itemBuilder: (context, index) {
-              var data = assignedUserList[index];
-              String name = data["Name"];
-
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Text('${index + 1}'),
-                ),
-                title: Text(
-                  name,
+  void customUserList(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  "Assigned users to this project",
                   style: GoogleFonts.fredoka(
-                      fontSize: 20.sp, fontWeight: FontWeight.bold),
+                      fontSize: 25.sp, fontWeight: FontWeight.w400),
                 ),
-              );
-            },
+              ),
+              IconButton(
+                onPressed: () {
+                  clearText();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.close,
+                  size: 40,
+                ),
+              ),
+            ],
           ),
-        ),
-      );
-    },
-  );
-}
+          content: SizedBox(
+              height: 400,
+              width: MediaQuery.of(context).size.width * 0.8, // Adjust width
+              child:ListView.builder(
+                      itemCount: assignedUserList.length,
+                      itemBuilder: (context, index) {
+                        var data = assignedUserList[index];
+                        String name = data["Name"];
+                        return ListTile(
+                          leading: CircleAvatar(
+                            child: Text('${index + 1}'),
+                          ),
+                          title: Text(
+                            name,
+                            style: GoogleFonts.fredoka(
+                              fontSize: 20.sp,
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                 ),
+        );
+      },
+    );
+  }
 }

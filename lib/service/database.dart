@@ -149,63 +149,58 @@ class DatabaseMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   dynamic fieldValue = '';
 
-Future<List<Map<String,dynamic>>> fetchDocumentData(String documentId) async {
-  List<Map<String,dynamic>> userList = [];
-  try {
-    DocumentSnapshot document =
-        await _firestore.collection('Project').doc(documentId).get();
+  Future<List<Map<String, dynamic>>> fetchAssignedUserData(
+      String documentId) async {
+    List<Map<String, dynamic>> userList = [];
+    try {
+      DocumentSnapshot document =
+          await _firestore.collection('Project').doc(documentId).get();
 
-    if (document.exists) {
-      List<dynamic> fieldValue = document['AssignedUsers']; // Assuming it's a list
-      print("OUTPUT----->>>>>> $fieldValue");
-
-      // Loop through the list of IDs and fetch user data for each
-      for (String userId in fieldValue) {
-         Map<String,dynamic> userData =  await fetchUsersData(userId);
-         userList.add(userData);
+      if (document.exists) {
+        List<dynamic> fieldValue = document['AssignedUsers'];
+        for (String userId in fieldValue) {
+          Map<String, dynamic> userData = await fetchUsersData(userId);
+          userList.add(userData);
+        }
+        return userList;
+      } else {
+        return [];
       }
-      return userList;
-    } else {
+    } catch (e) {
       return [];
-      print("Document not found");
     }
-  } catch (e) {
-    return [];
-    print("Error fetching document: $e");
   }
 
-}
+  Future<Map<String, dynamic>> fetchUsersData(String userId) async {
+    try {
+      DocumentSnapshot document =
+          await _firestore.collection('User').doc(userId).get();
+      if (document.exists) {
+        Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+        return userData;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      return {};
+    }
+  }
 
-Future<Map<String,dynamic>> fetchUsersData(String userId) async {
-  try {
+//-----------------------------------User Details Screen Functions-----------------------------
+
+  Future fetchAssignedTaskDetails(String userId) async {
     DocumentSnapshot document =
         await _firestore.collection('User').doc(userId).get();
-    if (document.exists) {
-    
-      Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
-      return userData;
-       print(userData); // Print user data
-      // return document.data();
-     
-    } else {
-      return {};
-      print("User document not found for ID: $userId");
-    }
-  } catch (e) {
-    return {};
-    print("Error fetching user data: $e");
   }
-}
-
-}
-
- 
-
-
-
-
-
 
   
 
-
+  // Future fetchUserDetails(String userId) async {
+  //   DocumentSnapshot document =
+  //       await _firestore.collection('User').doc(userId).get();
+  //   print(document.data());
+  //   if (document.exists) {
+  //     List<dynamic> fieldValue = document['AssignedUsers'];
+  //   }
+  // }
+}
