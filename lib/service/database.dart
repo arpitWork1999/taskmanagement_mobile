@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:task_management_tool/widgets/custom_list_class.dart';
 
 class DatabaseMethods {
   Future addEmployeeDetails(
@@ -187,13 +188,57 @@ class DatabaseMethods {
   }
 
 //-----------------------------------User Details Screen Functions-----------------------------
+  Future<ListContainer> matchAndRetrieve(String idToMatch) async {
+    try {
+      CollectionReference secondCollection =
+          FirebaseFirestore.instance.collection('Task');
 
-  Future fetchAssignedTaskDetails(String userId) async {
-    DocumentSnapshot document =
-        await _firestore.collection('User').doc(userId).get();
+      QuerySnapshot querySnapshot = await secondCollection
+          .where('AssignedUsers', arrayContains: idToMatch)
+          .get();
+      //print("IDDDDDD---->>>>$idToMatch");
+      List<dynamic> taskNameList = [];
+      List<dynamic> projectIdList = [];
+      List<dynamic> newProjectIdList = [];
+      List<dynamic> finalProjectList = [];
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        dynamic taskNames = doc.get('TaskName');
+        dynamic projectId = doc.get('AssignedProject');
+        taskNameList.add(taskNames);
+        projectIdList.add(projectId);
+      }
+      newProjectIdList = projectIdList.toSet().toList();
+
+      for (dynamic id in newProjectIdList) {
+        List<dynamic> projectData = await fetchAssignedProjectData(id);
+        finalProjectList.addAll(projectData);
+      }
+      // print('Project List-->>: $newProjectIdList');
+      // print('Task List-->>: $taskNameList');
+      print('final List-->>: $finalProjectList');
+    
+      return ListContainer(list1:finalProjectList,list2: taskNameList );
+    } catch (e) {
+      print('Error occurred: $e');
+      return ListContainer(list1: [],list2: []);
+    }
   }
 
-  
+  Future<List<String>> fetchAssignedProjectData(dynamic id) async {
+  List<String> finalProjectIdList = [];
+  try {
+    DocumentSnapshot document =
+        await _firestore.collection('Project').doc(id).get();
+    if (document.exists) {
+      String projectName = document.get('Project_Name');
+      finalProjectIdList.add(projectName);
+    }
+  } catch (e) {
+    print('Error fetching project data: $e');
+  }
+  return finalProjectIdList;
+}
+
 
   // Future fetchUserDetails(String userId) async {
   //   DocumentSnapshot document =
@@ -203,4 +248,10 @@ class DatabaseMethods {
   //     List<dynamic> fieldValue = document['AssignedUsers'];
   //   }
   // }
+  // Future fetchAssignedTaskDetails(String userId) async {
+  //     DocumentSnapshot document =
+  //         await _firestore.collection('User').doc(userId).get();
+  //   }
+  //dynamic projectData = document.get('Project_Name');
+  //Map<String, dynamic> projectData = document.data() as Map<String, dynamic>;
 }

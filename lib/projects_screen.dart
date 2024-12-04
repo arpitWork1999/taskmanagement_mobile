@@ -136,11 +136,11 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                         try {
                                           List<Map<String, dynamic>> userList =
                                               await dialog
-                                                  .fetchAssignedUserData(ds["ID"]);
+                                                  .fetchAssignedUserData(
+                                                      ds["ID"]);
                                           setState(() {
                                             assignedUserList = userList;
-                                            loadingProjectId =
-                                                null; // Stop loading
+                                            loadingProjectId = null;
                                           });
                                           if (assignedUserList.isNotEmpty) {
                                             customUserList(context);
@@ -180,10 +180,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                             )
                                           : const Icon(Icons
                                               .arrow_drop_down_circle_outlined),
-                                              style: ButtonStyle(
-                                           iconColor: WidgetStateProperty.all(
-                                               Colors.blue)),
-                                              
+                                      style: ButtonStyle(
+                                          iconColor: WidgetStateProperty.all(
+                                              Colors.blue)),
                                     ),
                                   ],
                                 ),
@@ -468,25 +467,24 @@ class _ProjectScreenState extends State<ProjectScreen> {
           content: SizedBox(
               height: 400,
               width: MediaQuery.of(context).size.width * 0.8, // Adjust width
-              child:ListView.builder(
-                      itemCount: assignedUserList.length,
-                      itemBuilder: (context, index) {
-                        var data = assignedUserList[index];
-                        String name = data["Name"];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            child: Text('${index + 1}'),
-                          ),
-                          title: Text(
-                            name,
-                            style: GoogleFonts.fredoka(
-                              fontSize: 20.sp,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                 ),
+              child: ListView.builder(
+                itemCount: assignedUserList.length,
+                itemBuilder: (context, index) {
+                  var data = assignedUserList[index];
+                  String name = data["Name"];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      child: Text('${index + 1}'),
+                    ),
+                    title: Text(
+                      name,
+                      style: GoogleFonts.fredoka(
+                        fontSize: 20.sp,
+                      ),
+                    ),
+                  );
+                },
+              )),
         );
       },
     );
