@@ -14,182 +14,204 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   DatabaseMethods databaseMethods = DatabaseMethods();
-    List<dynamic> assignedTaskNameList = [];
-    List<dynamic> assignedProjectNameList = [];
+
+  bool isLoading = true;
+
+  List<dynamic> assignedTaskNameList = [];
+  List<dynamic> assignedProjectNameList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fethData();
+    getProjectData();
+    getTaskData();
+  }
+
+  fethData() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Future.wait([getProjectData(), getTaskData()]);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> getProjectData() async {
+    try {
+      ListContainer projectNameList =
+          await databaseMethods.matchAndRetrieve(widget.id);
+      setState(() {
+        assignedProjectNameList = projectNameList.list1;
+      });
+
+      if (assignedProjectNameList.isNotEmpty) {
+        ListView.builder(
+          itemCount: assignedProjectNameList.length,
+          itemBuilder: (context, index) {},
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No users assigned to this project.')),
+        );
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching users: $e')),
+      );
+    }
+  }
+
+  Future<void> getTaskData() async {
+    try {
+      ListContainer taskNameList =
+          await databaseMethods.matchAndRetrieve(widget.id);
+      setState(() {
+        assignedTaskNameList = taskNameList.list2;
+      });
+
+      if (assignedTaskNameList.isNotEmpty) {
+        ListView.builder(
+          itemCount: assignedProjectNameList.length,
+          itemBuilder: (context, index) {},
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No users assigned to this project.')),
+        );
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching users: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Details"),
+        title: const Text("User Details"),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-              onPressed: () async {
-                try {
-                  ListContainer projectNameList = await databaseMethods.matchAndRetrieve(widget.id);
-                  setState(() {
-                    assignedProjectNameList = projectNameList.list1;
-                  });
-          
-                  if (assignedProjectNameList.isNotEmpty) {
-                    customTaskNameList(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('No users assigned to this project.')),
-                    );
-                  }
-                } catch (e) {
-                  print(e);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error fetching users: $e')),
-                  );
-                }
-                //databaseMethods.fetchUserDetails(widget.id);
-                //databaseMethods.matchAndRetrieve(widget.id);
-              },
-              icon: const Icon(Icons.arrow_drop_down_circle_outlined)),
-
-               IconButton(
-              onPressed: () async {
-                try {
-                 ListContainer taskNameList =
-                      await databaseMethods.matchAndRetrieve(widget.id);
-                  setState(() {
-                    assignedTaskNameList = taskNameList.list2;
-                  });
-          
-                  if (assignedTaskNameList.isNotEmpty) {
-                    secondCustomTaskNameList(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('No users assigned to this project.')),
-                    );
-                  }
-                } catch (e) {
-                  print(e);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error fetching users: $e')),
-                  );
-                }
-                //databaseMethods.fetchUserDetails(widget.id);
-                //databaseMethods.matchAndRetrieve(widget.id);
-              },
-              icon: const Icon(Icons.arrow_drop_down_circle_outlined)),
-
-        ],
-      ),
-    );
-  }
-
-  void customTaskNameList(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  "Assigned projects to this user",
-                  style: GoogleFonts.fredoka(
-                      fontSize: 20.sp, fontWeight: FontWeight.w400),
+      body: isLoading
+          ? const Center(
+              child: SizedBox(
+                height: 30.0,
+                width: 30.0,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  value: null,
+                  strokeWidth: 2.0,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.close,
-                  size: 30,
-                ),
-              ),
-            ],
-          ),
-          content: SizedBox(
-              height: 300,
-              width: MediaQuery.of(context).size.width * 0.8, // Adjust width
-              child: ListView.builder(
-                itemCount: assignedProjectNameList.length,
-                itemBuilder: (context, index) {
-                  String projectName = assignedProjectNameList[index];
-                  // var data = assignedTaskNameList[index];
-                  // String name = data["TaskName"];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text('${index + 1}'),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text("Assigned Projects",
+                            style: GoogleFonts.fredoka(
+                              fontSize: 18.sp,
+                            )),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: assignedProjectNameList.length,
+                          itemBuilder: (context, index) {
+                            String projectName = assignedProjectNameList[index];
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: CircleAvatar(
+                                        radius: 10.r,
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: GoogleFonts.fredoka(
+                                            fontSize: 10.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        projectName,
+                                        style: GoogleFonts.fredoka(
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    title: Text(
-                      projectName,
-                      style: GoogleFonts.fredoka(
-                        fontSize: 20.sp,
+                  ),
+                  Expanded(
+                      child: Column(
+                    children: [
+                      Text("Assigned Tasks",
+                          style: GoogleFonts.fredoka(
+                            fontSize: 18.sp,
+                          )),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: assignedTaskNameList.length,
+                        itemBuilder: (context, index) {
+                          dynamic name = assignedTaskNameList[index];
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: CircleAvatar(
+                                      radius: 10.r,
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: GoogleFonts.fredoka(
+                                          fontSize: 10.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      name,
+                                      style: GoogleFonts.fredoka(
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          );
+                        },
                       ),
-                    ),
-                  );
-                },
-              )),
-        );
-      },
-    );
-  }
-  void secondCustomTaskNameList(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  "Assigned tasks to this user",
-                  style: GoogleFonts.fredoka(
-                      fontSize: 25.sp, fontWeight: FontWeight.w400),
-                ),
+                    ],
+                  )),
+                ],
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.close,
-                  size: 40,
-                ),
-              ),
-            ],
-          ),
-          content: SizedBox(
-              height: 300,
-              width: MediaQuery.of(context).size.width * 0.8, // Adjust width
-              child: ListView.builder(
-                itemCount: assignedTaskNameList.length,
-                itemBuilder: (context, index) {
-                  dynamic name = assignedTaskNameList[index];
-                  // var data = assignedTaskNameList[index];
-                  // String name = data["TaskName"];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text('${index + 1}'),
-                    ),
-                    title: Text(
-                      name,
-                      style: GoogleFonts.fredoka(
-                        fontSize: 20.sp,
-                      ),
-                    ),
-                  );
-                },
-              )),
-        );
-      },
+            ),
     );
   }
 }

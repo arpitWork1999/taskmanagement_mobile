@@ -215,7 +215,7 @@ class DatabaseMethods {
       }
       // print('Project List-->>: $newProjectIdList');
       // print('Task List-->>: $taskNameList');
-      print('final List-->>: $finalProjectList');
+      // print('final List-->>: $finalProjectList');
     
       return ListContainer(list1:finalProjectList,list2: taskNameList );
     } catch (e) {
@@ -238,20 +238,4 @@ class DatabaseMethods {
   }
   return finalProjectIdList;
 }
-
-
-  // Future fetchUserDetails(String userId) async {
-  //   DocumentSnapshot document =
-  //       await _firestore.collection('User').doc(userId).get();
-  //   print(document.data());
-  //   if (document.exists) {
-  //     List<dynamic> fieldValue = document['AssignedUsers'];
-  //   }
-  // }
-  // Future fetchAssignedTaskDetails(String userId) async {
-  //     DocumentSnapshot document =
-  //         await _firestore.collection('User').doc(userId).get();
-  //   }
-  //dynamic projectData = document.get('Project_Name');
-  //Map<String, dynamic> projectData = document.data() as Map<String, dynamic>;
 }
